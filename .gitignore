@@ -25,3 +25,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# custom: add your ignore files below this line
+# Example:
+# .DS_Store
+# coverage/
+# dist/

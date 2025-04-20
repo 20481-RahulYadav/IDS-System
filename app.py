@@ -129,6 +129,7 @@ async def simulate_intrusions():
         log_dict["_id"] = str(result.inserted_id)
         log_dict["timestamp"] = log_dict["timestamp"].isoformat()
         await broadcast_log(log_dict)
+       
         
         # Wait random time between 5-30 seconds
         await asyncio.sleep(random.randint(5, 30))

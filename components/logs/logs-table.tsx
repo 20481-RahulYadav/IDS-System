@@ -42,7 +42,8 @@ export function LogsTable() {
     //   `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/api/logs/ws`,
     // )
     // Update WebSocket connection
-    const wsUrl = `${process.env.NEXT_PUBLIC_API_URL.replace('https://', 'wss://').replace('http://', 'ws://')}/api/logs/ws`
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://ids-system-3k6a.onrender.com"
+    const wsUrl = `${apiUrl.replace("https://", "wss://").replace("http://", "ws://")}/api/logs/ws`
     const ws = new WebSocket(wsUrl)
     ws.onmessage = (event) => {
       const newLog = JSON.parse(event.data)

@@ -15,7 +15,8 @@ export function LogsTable() {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const response = await fetch("/api/logs")
+        debugger;
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/logs`)
         if (!response.ok) {
           throw new Error("Failed to fetch logs")
         }
@@ -28,7 +29,7 @@ export function LogsTable() {
           variant: "destructive",
         })
         // Use sample data as fallback
-        setLogs(getSampleLogs())
+        // setLogs(getSampleLogs())
       } finally {
         setIsLoading(false)
       }
@@ -37,10 +38,12 @@ export function LogsTable() {
     fetchLogs()
 
     // Set up WebSocket connection for real-time updates
-    const ws = new WebSocket(
-      `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/api/logs/ws`,
-    )
-
+    // const ws = new WebSocket(
+    //   `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}/api/logs/ws`,
+    // )
+    // Update WebSocket connection
+    const wsUrl = `${process.env.NEXT_PUBLIC_API_URL.replace('https://', 'wss://').replace('http://', 'ws://')}/api/logs/ws`
+    const ws = new WebSocket(wsUrl)
     ws.onmessage = (event) => {
       const newLog = JSON.parse(event.data)
       setLogs((prevLogs) => [newLog, ...prevLogs.slice(0, 99)])

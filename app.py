@@ -9,6 +9,10 @@ import os
 from dotenv import load_dotenv
 import uvicorn
 import json
+from dotenv import load_dotenv
+import os
+from pymongo import MongoClient
+import pytz
 
 # Load environment variables
 load_dotenv()
@@ -25,7 +29,7 @@ app.add_middleware(
 )
 
 # MongoDB connection
-MONGODB_URI = os.getenv("MONGODB_URI", "mongodb+srv://TuneTonicUser:nimda%40007@cluster0.r2ykx.mongodb.net/intrusion-detectionnew")
+MONGODB_URI = os.getenv("MONGODB_URI")
 client = MongoClient(MONGODB_URI)
 db = client.get_database()
 logs_collection = db.logs
@@ -57,7 +61,8 @@ async def get_logs():
 @app.post("/api/logs")
 async def create_log(log: LogEntry):
     log_dict = log.dict()
-    log_dict["timestamp"] = datetime.datetime.utcnow()
+    ist = pytz.timezone('Asia/Kolkata')
+    log_dict["timestamp"] =datetime.datetime.now(ist)
     result = logs_collection.insert_one(log_dict)
     
     # Broadcast to all connected WebSocket clients
@@ -116,7 +121,8 @@ async def simulate_intrusions():
         
         # Save to database and broadcast
         log_dict = log_entry.dict()
-        log_dict["timestamp"] = datetime.datetime.utcnow()
+        ist = pytz.timezone('Asia/Kolkata')
+        log_dict["timestamp"] =datetime.datetime.now(ist)
         result = logs_collection.insert_one(log_dict)
         
         # Broadcast to WebSocket clients

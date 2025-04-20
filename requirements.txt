@@ -6,3 +6,4 @@ pydantic==2.4.2
 websockets==11.0.3
 python-jose==3.3.0
 bcrypt==4.0.1
+pytz==2025.2

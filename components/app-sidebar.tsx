@@ -76,7 +76,7 @@ export function AppSidebar() {
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild isActive={pathname === "/dashboard/settings"}>
-              <Link href="/dashboard/settings">
+              <Link href="/settings">
                 <Settings />
                 <span>Settings</span>
               </Link>
@@ -84,7 +84,7 @@ export function AppSidebar() {
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild isActive={pathname === "/dashboard/profile"}>
-              <Link href="/dashboard/profile">
+              <Link href="/profile">
                 <User />
                 <span>Profile</span>
               </Link>

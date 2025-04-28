@@ -14,37 +14,16 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/lib/auth/auth-context"
 
 export function AppSidebar() {
   const pathname = usePathname()
-  const { toast } = useToast()
+  const { logout, user } = useAuth()
 
-  const handleLogout = async () => {
-    try {
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-
-      if (response.ok) {
-        toast({
-          title: "Logged out successfully",
-          description: "You have been logged out of your account",
-        })
-        window.location.href = "/login"
-      } else {
-        throw new Error("Failed to logout")
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to logout. Please try again.",
-        variant: "destructive",
-      })
-    }
+  // Don't render the sidebar if user is not authenticated
+  // This prevents the sidebar from flashing before redirect
+  if (!user && (pathname === "/login" || pathname === "/register")) {
+    return null
   }
 
   return (
@@ -76,7 +55,7 @@ export function AppSidebar() {
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild isActive={pathname === "/dashboard/settings"}>
-              <Link href="/settings">
+              <Link href="/dashboard/settings">
                 <Settings />
                 <span>Settings</span>
               </Link>
@@ -84,7 +63,7 @@ export function AppSidebar() {
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild isActive={pathname === "/dashboard/profile"}>
-              <Link href="/profile">
+              <Link href="/dashboard/profile">
                 <User />
                 <span>Profile</span>
               </Link>
@@ -96,7 +75,7 @@ export function AppSidebar() {
         <Button
           variant="ghost"
           className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-gray-800"
-          onClick={handleLogout}
+          onClick={logout}
         >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Logout</span>

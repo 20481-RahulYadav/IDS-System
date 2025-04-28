@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -20,7 +20,11 @@ const formSchema = z.object({
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { toast } = useToast()
+
+  // Get the callback URL from the search params
+  const callbackUrl = searchParams?.get("callbackUrl") || "/dashboard"
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,7 +57,8 @@ export function LoginForm() {
         description: "Welcome back to the dashboard",
       })
 
-      router.push("/dashboard")
+      // Redirect to the callback URL or dashboard
+      router.push(decodeURI(callbackUrl))
       router.refresh()
     } catch (error) {
       toast({

@@ -1,14 +1,16 @@
 import { MongoClient } from "mongodb"
 
-const uri = process.env.MONGODB_URI
+let uri: string;
+if (!process.env.MONGODB_URI) {
+  throw new Error("⚠️ Missing MONGODB_URI in environment variables.");
+} else {
+  uri = process.env.MONGODB_URI;
+}
+
 const options = {}
 
 let client: MongoClient
 let clientPromise: Promise<MongoClient>
-
-if (!process.env.MONGODB_URI) {
-  console.warn("No MONGODB_URI found in .env file. Using local MongoDB instance.")
-}
 
 if (process.env.NODE_ENV === "development") {
   // In development mode, use a global variable so that the value

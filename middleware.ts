@@ -2,28 +2,27 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { verify } from "jsonwebtoken"
 
-// This function can be marked `async` if using `await` inside
+const JWT_SECRET = "a-string-secret-at-least-256-bits-long" // 🔐 Use exact value as used during signing
+
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
-
-  // Define public paths that don't require authentication
   const isPublicPath = path === "/login" || path === "/register"
+  const token = request.cookies.get("auth-token")?.value
 
-  // Get the token from the cookies
-  const token = request.cookies.get("auth-token")?.value || ""
-
-  // If the path is public and the user is logged in, redirect to dashboard
-  if (isPublicPath && token) {
+  if (token) {
     try {
-      // Verify the token
-      verify(token, process.env.JWT_SECRET || "fallback_secret")
-      return NextResponse.redirect(new URL("/dashboard", request.url))
+      verify(token, JWT_SECRET)
+      if (isPublicPath) {
+        return NextResponse.redirect(new URL("/dashboard", request.url))
+      }
     } catch (error) {
-      // If token verification fails, continue to the public path
+      console.warn("Token verification failed", error)
+      if (!isPublicPath) {
+        return NextResponse.redirect(new URL("/login", request.url))
+      }
     }
   }
 
-  // If the path is not public and the user is not logged in, redirect to login
   if (!isPublicPath && !token) {
     return NextResponse.redirect(new URL("/login", request.url))
   }
@@ -31,7 +30,6 @@ export function middleware(request: NextRequest) {
   return NextResponse.next()
 }
 
-// See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/dashboard/:path*", "/login", "/register"],
+  matcher: ["/dashboard/:path*", "/profile", "/settings", "/logs", "/login", "/register"],
 }

@@ -1,4 +1,6 @@
 import type { Metadata } from "next"
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { DashboardShell } from "@/components/dashboard/dashboard-shell"
 import { LogsTable } from "@/components/logs/logs-table"
@@ -10,7 +12,16 @@ export const metadata: Metadata = {
   description: "View and analyze intrusion detection logs",
 }
 
-export default function DashboardPage() {
+export const dynamic = "force-dynamic"
+
+export default async function DashboardPage() {
+  const cookieStore = await cookies()
+  const token = cookieStore.get("auth-token")?.value
+
+  if (!token) {
+    // Not authenticated → redirect to login
+    redirect("/login")
+  }
   return (
     <DashboardShell>
       <DashboardHeader heading="Security Dashboard" text="Monitor and analyze intrusion detection logs in real-time" />

@@ -1,5 +1,6 @@
 "use client"
-
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
@@ -23,8 +24,16 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { AvatarUpload } from "@/components/ui/profile/avtar-upload"
+export const dynamic = "force-dynamic"
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+  const cookieStore = await cookies()
+  const token = cookieStore.get("auth-token")?.value
+
+  if (!token) {
+    // Not authenticated → redirect to login
+    redirect("/login")
+  }
   const router = useRouter()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)

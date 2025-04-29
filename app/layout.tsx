@@ -3,7 +3,6 @@ import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
-import { AuthProvider } from "@/lib/auth/auth-context"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -11,6 +10,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata = {
   title: "Intrusion Detection System",
   description: "Real-time intrusion detection system dashboard",
+    generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -22,14 +22,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <AuthProvider>
-            <SidebarProvider>
-              <div className="flex h-screen">
-                <AppSidebar />
-                <main className="flex-1 overflow-auto bg-navy">{children}</main>
-              </div>
-            </SidebarProvider>
-          </AuthProvider>
+          <SidebarProvider>
+            <div className="flex h-screen">
+              <AppSidebar />
+              <main className="flex-1 overflow-auto bg-navy">{children}</main>
+            </div>
+          </SidebarProvider>
         </ThemeProvider>
       </body>
     </html>

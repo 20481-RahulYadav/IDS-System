@@ -1,7 +1,11 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import { LoginForm } from "@/components/auth/login-form"
+
+export const dynamic = "force-dynamic";
+
 
 export const metadata: Metadata = {
   title: "Login | Intrusion Detection System",

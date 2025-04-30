@@ -46,17 +46,7 @@ export default function ProfilePage() {
     confirmPassword: "",
   })
 
-  // ✅ Check auth token in client (fallback, not secure for sensitive auth)
-  useEffect(() => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("auth-token="))
-      ?.split("=")[1]
-
-    if (!token) {
-      router.push("/login")
-    }
-  }, [router])
+  
 
   useEffect(() => {
     const loadProfile = async () => {
